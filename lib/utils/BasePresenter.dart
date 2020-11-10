@@ -4,24 +4,20 @@ import 'dart:collection';
 import 'BaseView.dart';
 
 abstract class BasePresenter<V extends BaseView> {
-  V baseView;
   HashMap<String, StreamController<BlocEvent>> streamController;
 
   BasePresenter() {
     streamController = new HashMap();
   }
   addStreamControllerBroadcast(k) {
-    streamController.putIfAbsent(
-        k, () => StreamController<BlocEvent>.broadcast());
+    streamController.putIfAbsent(k, () => StreamController<BlocEvent>.broadcast());
   }
 
   void addStreamController(k) {
     streamController.putIfAbsent(k, () => StreamController<BlocEvent>());
   }
 
-  void intiView(V baseView) {
-    this.baseView = baseView;
-  }
+  void intiView(V baseView) {}
 
   Sink getSink(k) {
     return streamController[k].sink;
