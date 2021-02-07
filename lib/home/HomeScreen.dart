@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:init_app/utils/BaseView.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:init_app/base/BasePresenter.dart';
+import 'package:init_app/base/BaseState.dart';
+
 import 'HomePresenter.dart';
-import 'HomePresenter.dart';
-import 'HomeView.dart';
 import 'HomeViewModel.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,33 +12,61 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> implements HomeView {
+class _HomeScreenState extends BaseState<HomeScreen, HomePresenter> {
   HomeViewModel viewModel;
-  HomePresenter _presenter;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    viewModel = new HomeViewModel();
-    _presenter = new HomePresenter(viewModel);
-    _presenter.intiView(this);
-  }
+  IHomePresenter _presenter;
 
   @override
-  void dispose() {
-    super.dispose();
-    if (_presenter != null) {
-      _presenter.onDispose();
-    }
+  void initState({HomePresenter presenter}) {
+    // TODO: implement initState
+    _presenter = new HomePresenter(viewModel);
+    super.initState(presenter: _presenter);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
-  }
-
-  @override
-  void showDialog() {
-    // TODO: implement showDialog
+    return Scaffold(
+      body: Container(
+        child: Center(
+          child: Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                StreamBuilder(
+                  stream: _presenter.stream(HomePresenter.E),
+                  builder: (_, snap) {
+                    print("snap    $snap");
+                    print("snap1 ${snap.data}");
+                    return snap.data == null || snap.data is BlocLoading
+                        ? CircularProgressIndicator(
+                            strokeWidth: 3,
+                          )
+                        : snap.data is BlocLoaded
+                            ? Text(snap.data.value)
+                            : Container();
+                  },
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                FlatButton(
+                  onPressed: () {
+                    _presenter.click();
+                  },
+                  child: Card(
+                    elevation: 4,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Text("Click Me"),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -1,29 +1,32 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'BaseView.dart';
-
-abstract class BasePresenter<V extends BaseView> {
+abstract class BasePresenter {
   HashMap<String, StreamController<BlocEvent>> streamController;
 
   BasePresenter() {
     streamController = new HashMap();
   }
+
   addStreamControllerBroadcast(k) {
-    streamController.putIfAbsent(k, () => StreamController<BlocEvent>.broadcast());
+    streamController.putIfAbsent(
+        k, () => StreamController<BlocEvent>.broadcast());
+  }
+
+  void addStream(k) {
+    streamController.putIfAbsent(
+        k, () => StreamController<BlocEvent>.broadcast());
   }
 
   void addStreamController(k) {
     streamController.putIfAbsent(k, () => StreamController<BlocEvent>());
   }
 
-  void intiView(V baseView) {}
-
-  Sink getSink(k) {
-    return streamController[k].sink;
+  void sink(k, BlocEvent event) {
+    return streamController[k].sink.add(event);
   }
 
-  Stream getStream(k) {
+  Stream stream(k) {
     return streamController[k].stream;
   }
 
