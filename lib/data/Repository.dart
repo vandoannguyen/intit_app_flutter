@@ -4,10 +4,23 @@ import 'SharePref.dart';
 abstract class IRepository implements IApi, ISharePref {}
 
 class RepositoryImpl implements IRepository {
+  static RepositoryImpl _repositoryImpl;
+  ISharePref _sharef;
+  IApi _api;
+
+  static RepositoryImpl getInstance() {
+    if (_repositoryImpl == null) _repositoryImpl = new RepositoryImpl();
+    return _repositoryImpl;
+  }
+
+  RepositoryImpl() {
+    _sharef = SharePrefImpl();
+    _api = ApiImpl();
+  }
+
   @override
   Future getData() {
-    // TODO: implement getData
-    throw UnimplementedError();
+    return _api.getData();
   }
 
   @override
@@ -17,8 +30,7 @@ class RepositoryImpl implements IRepository {
   }
 
   @override
-  Future<void> getSharePref() {
-    // TODO: implement getSharePref
-    throw UnimplementedError();
+  Future getSharePref() {
+    return _sharef.getSharePref();
   }
 }

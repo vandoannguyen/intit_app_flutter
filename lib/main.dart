@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:init_app/common/Common.dart';
 import 'package:init_app/home/HomeScreen.dart';
 
-import 'config.dart';
-
 void main() {
-  Common.config = config;
   return runApp(MyApp());
 }
 
@@ -17,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: Home(),
     );
   }
 }

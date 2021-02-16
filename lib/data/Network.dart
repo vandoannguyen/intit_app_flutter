@@ -1,13 +1,22 @@
+import 'dart:async';
+
+import 'package:dio/dio.dart';
+
 abstract class IApi {
+  // create method call api here
   Future getData();
+
   Future<String> getDb();
 }
 
 class ApiImpl implements IApi {
   @override
   Future getData() {
-    // TODO: implement getData
-    throw UnimplementedError();
+    Completer completer = new Completer();
+    Dio().get("http://ip-api.com/json").then((response) {
+      completer.complete(response.data);
+    }).catchError((err) => {completer.completeError(err)});
+    return completer.future;
   }
 
   @override
